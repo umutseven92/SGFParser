@@ -1,3 +1,4 @@
-## [0.0.1] - TODO: Add release date.
+## [0.0.1] - 2019-07-16
 
-* TODO: Describe initial release.
+* Initial release!
+* Supports FF, GM, SZ, DT, EV and game moves.

@@ -24,10 +24,10 @@ class SGFParser {
     return converter(match);
   }
 
-  List<Move> _parseMoves() {
+  List<Move> parseMoves() {
     var moves = <Move>[];
-    var bExp = RegExp(r';(.?)\[(.*?)\]');
-    var matches = bExp.allMatches(sgf);
+    var exp = RegExp(r';(.?)\[(.*?)\]');
+    var matches = exp.allMatches(sgf);
 
     matches.forEach((match) {
       Player player = match.group(1) == 'B' ? Player.Black : Player.White;
@@ -104,7 +104,7 @@ class SGFParser {
 
   Game parse() {
     var attributes = _parseAttributes();
-    var moves = _parseMoves();
+    var moves = parseMoves();
 
     return Game(attributes, moves);
   }

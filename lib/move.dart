@@ -1,11 +1,14 @@
+import 'package:equatable/equatable.dart';
 import 'package:sgf_parser/player.dart';
 
-class Move {
+class Move extends Equatable {
   final Player player;
-  String column;
-  String row;
+  final String column;
+  final String row;
 
-  Move(this.player, this.column, this.row);
+  Move(this.player, this.column, this.row) : super([player, column, row]);
 
-  Move.pass(this.player);
+  factory Move.pass(Player player) {
+    return Move(player, null, null);
+  }
 }
