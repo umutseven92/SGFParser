@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:sgf_parser/player.dart';
+import 'package:sgf_parser/game/player.dart';
 
 class Move extends Equatable {
   final Player player;

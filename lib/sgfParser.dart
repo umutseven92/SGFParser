@@ -1,16 +1,19 @@
 library sgf_parser;
 
-import 'package:sgf_parser/boardSize.dart';
+import 'package:sgf_parser/properties/boardSize.dart';
 import 'package:sgf_parser/exceptions/gameTypeNotSupportedException.dart';
-import 'package:sgf_parser/fileFormat.dart';
-import 'package:sgf_parser/game.dart';
-import 'package:sgf_parser/gameAttributes.dart';
-import 'package:sgf_parser/gameType.dart';
-import 'package:sgf_parser/move.dart';
-import 'package:sgf_parser/player.dart';
+import 'package:sgf_parser/properties/fileFormat.dart';
+import 'package:sgf_parser/game/game.dart';
+import 'package:sgf_parser/game/gameAttributes.dart';
+import 'package:sgf_parser/properties/gameType.dart';
+import 'package:sgf_parser/game/move.dart';
+import 'package:sgf_parser/game/player.dart';
 
 class SGFParser {
-  final List<GameType> supportedGameTypes = <GameType>[GameType.Go, GameType.Chess];
+  final List<GameType> supportedGameTypes = <GameType>[
+    GameType.Go,
+    GameType.Chess
+  ];
   final String sgf;
 
   T _parse<T>(String attribute, T Function(String) converter, [T defaultVal]) {
@@ -86,7 +89,7 @@ class SGFParser {
     GameType type = _parse(
         'GM', (match) => GameType.values[int.parse(match) - 1], GameType.Go);
 
-    if(!supportedGameTypes.contains(type)) {
+    if (!supportedGameTypes.contains(type)) {
       throw GameTypeNotSupportedException(type, supportedGameTypes);
     }
     return type;

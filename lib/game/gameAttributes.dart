@@ -1,6 +1,6 @@
-import 'package:sgf_parser/boardSize.dart';
-import 'package:sgf_parser/fileFormat.dart';
-import 'package:sgf_parser/gameType.dart';
+import 'package:sgf_parser/properties/boardSize.dart';
+import 'package:sgf_parser/properties/fileFormat.dart';
+import 'package:sgf_parser/properties/gameType.dart';
 
 class GameAttributes {
   final DateTime date;

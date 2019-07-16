@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sgf_parser/boardSize.dart';
+import 'package:sgf_parser/properties/boardSize.dart';
 import 'package:sgf_parser/exceptions/gameTypeNotSupportedException.dart';
-import 'package:sgf_parser/fileFormat.dart';
-import 'package:sgf_parser/gameAttributes.dart';
-import 'package:sgf_parser/gameType.dart';
-import 'package:sgf_parser/move.dart';
-import 'package:sgf_parser/player.dart';
+import 'package:sgf_parser/properties/fileFormat.dart';
+import 'package:sgf_parser/game/gameAttributes.dart';
+import 'package:sgf_parser/properties/gameType.dart';
+import 'package:sgf_parser/game/move.dart';
+import 'package:sgf_parser/game/player.dart';
 import 'package:sgf_parser/sgfParser.dart';
 
 void main() {
@@ -61,8 +60,7 @@ void main() {
         () {
       const sgfString = '(;FF[4]GM[2]SZ[19]';
       var parser = SGFParser(sgfString);
-      expect(
-          ()=>parser.parseGameType(),
+      expect(() => parser.parseGameType(),
           throwsA(isInstanceOf<GameTypeNotSupportedException>()));
     });
   });

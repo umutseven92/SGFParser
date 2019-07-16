@@ -1,6 +1,5 @@
-
-import 'package:sgf_parser/gameAttributes.dart';
-import 'package:sgf_parser/move.dart';
+import 'package:sgf_parser/game/gameAttributes.dart';
+import 'package:sgf_parser/game/move.dart';
 
 class Game {
   final GameAttributes attributes;
