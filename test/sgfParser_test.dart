@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sgf_parser/boardSize.dart';
+import 'package:sgf_parser/exceptions/gameTypeNotSupportedException.dart';
 import 'package:sgf_parser/fileFormat.dart';
 import 'package:sgf_parser/gameAttributes.dart';
 import 'package:sgf_parser/gameType.dart';
@@ -53,6 +55,15 @@ void main() {
       var parser = SGFParser(sgfString);
       var gameType = parser.parseGameType();
       expect(gameType, equals(GameType.Go));
+    });
+
+    test('Unsupported Game Types should throw GameTypeNotSupportedException',
+        () {
+      const sgfString = '(;FF[4]GM[2]SZ[19]';
+      var parser = SGFParser(sgfString);
+      expect(
+          ()=>parser.parseGameType(),
+          throwsA(isInstanceOf<GameTypeNotSupportedException>()));
     });
   });
 
@@ -126,7 +137,7 @@ void main() {
       expect(moves[2], equals(Move(Player.Black, 'p', 'q')));
       expect(moves[3], equals(Move(Player.White, 'd', 'c')));
     });
-    
+
     test('Can parse passes (empty)', () {
       const sgfString = 'GM[1];B[pd];W[];B[pq];W[dc]';
       var parser = SGFParser(sgfString);
@@ -137,7 +148,7 @@ void main() {
       expect(moves[2], equals(Move(Player.Black, 'p', 'q')));
       expect(moves[3], equals(Move(Player.White, 'd', 'c')));
     });
-    
+
     test('Can parse passes (tt)', () {
       const sgfString = 'GM[1];B[pd];W[tt];B[pq];W[dc]';
       var parser = SGFParser(sgfString);
@@ -148,7 +159,6 @@ void main() {
       expect(moves[2], equals(Move(Player.Black, 'p', 'q')));
       expect(moves[3], equals(Move(Player.White, 'd', 'c')));
     });
-
   });
 
   test('Can parse full game', () {
