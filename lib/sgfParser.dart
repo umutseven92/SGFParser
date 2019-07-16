@@ -1,21 +1,27 @@
 library sgf_parser;
 
-import 'package:sgf_parser/boardSize.dart';
-import 'package:sgf_parser/fileFormat.dart';
-import 'package:sgf_parser/game.dart';
-import 'package:sgf_parser/gameAttributes.dart';
-import 'package:sgf_parser/gameType.dart';
-import 'package:sgf_parser/move.dart';
-import 'package:sgf_parser/player.dart';
+import 'package:sgf_parser/game/player.dart';
+import 'package:sgf_parser/properties/boardSize.dart';
+import 'package:sgf_parser/exceptions/gameTypeNotSupportedException.dart';
+import 'package:sgf_parser/properties/fileFormat.dart';
+import 'package:sgf_parser/game/game.dart';
+import 'package:sgf_parser/game/gameAttributes.dart';
+import 'package:sgf_parser/properties/gameType.dart';
+import 'package:sgf_parser/game/move.dart';
+import 'package:sgf_parser/game/color.dart';
 
 class SGFParser {
+  final List<GameType> supportedGameTypes = <GameType>[
+    GameType.Go,
+    GameType.Chess
+  ];
   final String sgf;
 
   T _parse<T>(String attribute, T Function(String) converter, [T defaultVal]) {
     var exp = RegExp(attribute + r'\[(.*?)\]');
     var match = exp.firstMatch(sgf)?.group(1);
 
-    if (match == null) {
+    if (match == null || match.isEmpty) {
       if (defaultVal == null) {
         return null;
       }
@@ -24,13 +30,13 @@ class SGFParser {
     return converter(match);
   }
 
-  List<Move> _parseMoves() {
+  List<Move> parseMoves() {
     var moves = <Move>[];
-    var bExp = RegExp(r';(.?)\[(.*?)\]');
-    var matches = bExp.allMatches(sgf);
+    var exp = RegExp(r';(.?)\[(.*?)\]');
+    var matches = exp.allMatches(sgf);
 
     matches.forEach((match) {
-      Player player = match.group(1) == 'B' ? Player.Black : Player.White;
+      Color player = match.group(1) == 'B' ? Color.Black : Color.White;
       String moveString = match.group(2);
 
       Move move;
@@ -52,8 +58,14 @@ class SGFParser {
     BoardSize size = parseBoardSize(type);
     DateTime date = parseDate();
     String event = parseEvent();
+    String application = parseApplication();
+    String user = parseUser();
+    String place = parsePlace();
+    Player blackPlayer = parseBlackPlayer();
+    Player whitePlayer = parseWhitePlayer();
 
-    return GameAttributes(ff, date, type, size, event);
+    return GameAttributes(ff, date, type, size, event, application, user, place,
+        blackPlayer, whitePlayer);
   }
 
   BoardSize parseBoardSize(GameType gameType) {
@@ -83,28 +95,71 @@ class SGFParser {
   GameType parseGameType() {
     GameType type = _parse(
         'GM', (match) => GameType.values[int.parse(match) - 1], GameType.Go);
+
+    if (!supportedGameTypes.contains(type)) {
+      throw GameTypeNotSupportedException(type, supportedGameTypes);
+    }
     return type;
   }
 
   FileFormat parseFileFormat() {
-    FileFormat ff = _parse('FF',
-        (match) => FileFormat.values[int.parse(match) - 1], FileFormat.FF1);
-    return ff;
+    return _parse('FF', (match) => FileFormat.values[int.parse(match) - 1],
+        FileFormat.FF1);
   }
 
   DateTime parseDate() {
-    DateTime date = _parse('DT', DateTime.parse);
-    return date;
+    return _parse('DT', DateTime.parse);
   }
 
   String parseEvent() {
-    String event = _parse('EV', (match) => match);
-    return event;
+    return _parse('EV', (match) => match);
+  }
+
+  String parseApplication() {
+    return _parse('AP', (match) => match);
+  }
+
+  String parseUser() {
+    return _parse('US', (match) => match);
+  }
+
+  String parsePlace() {
+    return _parse('PC', (match) => match);
+  }
+
+  String parseWhitePlayerName() {
+    return _parse('PW', (match) => match);
+  }
+
+  String parseWhitePlayerRank() {
+    return _parse('WR', (match) => match);
+  }
+
+  Player parseWhitePlayer() {
+    var name = parseWhitePlayerName();
+    var rank = parseWhitePlayerRank();
+
+    return Player(Color.White, name, rank);
+  }
+
+  String parseBlackPlayerName() {
+    return _parse('PB', (match) => match);
+  }
+
+  String parseBlackPlayerRank() {
+    return _parse('BR', (match) => match);
+  }
+
+  Player parseBlackPlayer() {
+    var name = parseBlackPlayerName();
+    var rank = parseBlackPlayerRank();
+
+    return Player(Color.Black, name, rank);
   }
 
   Game parse() {
     var attributes = _parseAttributes();
-    var moves = _parseMoves();
+    var moves = parseMoves();
 
     return Game(attributes, moves);
   }

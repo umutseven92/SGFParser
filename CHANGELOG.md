@@ -1,3 +1,8 @@
-## [0.0.1] - TODO: Add release date.
+## [0.0.2] - 2019-07-16
 
-* TODO: Describe initial release.
+* Added support for AP, BR, PB, PC, PW, US, WR fields.
+
+## [0.0.1] - 2019-07-16
+
+* Initial release!
+* Supports FF, GM, SZ, DT, EV and game moves.
