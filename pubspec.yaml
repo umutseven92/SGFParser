@@ -1,5 +1,5 @@
 name: sgf_parser
-description: Parser library for SGF (Smart Game Format) files.
+description: Parser library for SGF (Smart Game Format) files. Currently supports Go & Chess.
 version: 0.0.2
 author: Umut Seven <umutseven92@gmail.com>
 homepage: https://umutseven.com
