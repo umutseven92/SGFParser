@@ -170,6 +170,10 @@ class SGFParser {
   String parseResult() {
     return _parse('RE', (match) => match, '?');
   }
+  
+  int parseTime() {
+    return _parse('TM', (match) => int.parse(match));
+  }
 
   Game parse() {
     var attributes = _parseAttributes();
@@ -179,4 +183,5 @@ class SGFParser {
   }
 
   SGFParser(this.sgf);
+
 }
