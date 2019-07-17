@@ -12,10 +12,11 @@ class GameAttributes {
   final String application;
   final String user;
   final String place;
-  final Player whitePlayer;
   final Player blackPlayer;
+  final Player whitePlayer;
   final double komi;
   final String result;
+  final int time;
 
   GameAttributes(
       this.fileFormat,
@@ -26,6 +27,9 @@ class GameAttributes {
       this.application,
       this.user,
       this.place,
+      this.blackPlayer,
       this.whitePlayer,
-      this.blackPlayer, this.komi, this.result);
+      this.komi,
+      this.result,
+      this.time);
 }

@@ -26,6 +26,7 @@ void main() {
     Player whitePlayer = Player(Color.White, 'Kono Rin', '9d');
     double komi = 6.5;
     String result = 'W+1.5';
+    int time = 0;
 
     expect(attributes.fileFormat, equals(expectedFormat));
     expect(attributes.date, equals(expectedDate));
@@ -37,6 +38,7 @@ void main() {
     expect(attributes.whitePlayer, equals(whitePlayer));
     expect(attributes.komi, equals(komi));
     expect(attributes.result, equals(result));
+    expect(attributes.time, equals(time));
 
     expect(attributes.application, equals(null));
     expect(attributes.user, equals(null));

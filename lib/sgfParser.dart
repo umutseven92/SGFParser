@@ -65,9 +65,10 @@ class SGFParser {
     Player whitePlayer = parseWhitePlayer();
     double komi = parseKomi(type);
     String result = parseResult();
+    int time = parseTime();
 
     return GameAttributes(ff, date, type, size, event, application, user, place,
-        blackPlayer, whitePlayer, komi, result);
+        blackPlayer, whitePlayer, komi, result, time);
   }
 
   BoardSize parseBoardSize(GameType gameType) {
@@ -170,7 +171,7 @@ class SGFParser {
   String parseResult() {
     return _parse('RE', (match) => match, '?');
   }
-  
+
   int parseTime() {
     return _parse('TM', (match) => int.parse(match));
   }
@@ -183,5 +184,4 @@ class SGFParser {
   }
 
   SGFParser(this.sgf);
-
 }
