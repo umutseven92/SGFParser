@@ -63,9 +63,11 @@ class SGFParser {
     String place = parsePlace();
     Player blackPlayer = parseBlackPlayer();
     Player whitePlayer = parseWhitePlayer();
+    double komi = parseKomi(type);
+    String result = parseResult();
 
     return GameAttributes(ff, date, type, size, event, application, user, place,
-        blackPlayer, whitePlayer);
+        blackPlayer, whitePlayer, komi, result);
   }
 
   BoardSize parseBoardSize(GameType gameType) {
@@ -155,6 +157,18 @@ class SGFParser {
     var rank = parseBlackPlayerRank();
 
     return Player(Color.Black, name, rank);
+  }
+
+  double parseKomi(GameType type) {
+    if (type == GameType.Go) {
+      return _parse('KM', (match) => double.parse(match), 0);
+    }
+
+    return null;
+  }
+
+  String parseResult() {
+    return _parse('RE', (match) => match, '?');
   }
 
   Game parse() {

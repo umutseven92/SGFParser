@@ -14,6 +14,8 @@ class GameAttributes {
   final String place;
   final Player whitePlayer;
   final Player blackPlayer;
+  final double komi;
+  final String result;
 
   GameAttributes(
       this.fileFormat,
@@ -25,5 +27,5 @@ class GameAttributes {
       this.user,
       this.place,
       this.whitePlayer,
-      this.blackPlayer);
+      this.blackPlayer, this.komi, this.result);
 }
