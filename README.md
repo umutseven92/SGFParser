@@ -1,5 +1,7 @@
 # SGF Parser
 
+![Pub](https://img.shields.io/pub/v/sgf_parser.svg)
+
 [Smart Game Format](https://en.wikipedia.org/wiki/Smart_Game_Format) parser for Flutter & Dart. Currently only supports Go.
 
 ## Supported Properties
