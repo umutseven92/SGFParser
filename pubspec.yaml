@@ -3,6 +3,7 @@ description: Parser library for SGF (Smart Game Format) files. Currently only su
 version: 0.0.3
 author: Umut Seven <umutseven92@gmail.com>
 homepage: https://umutseven.com
+repository: https://github.com/umutseven92/SGFParser
 
 environment:
   sdk: ">=2.3.0-dev <3.0.0"
