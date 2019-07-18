@@ -24,7 +24,7 @@ List<Move> moves = game.moves;
 
 Please see [here](https://github.com/umutseven92/SGFParser/blob/master/lib/example/example.dart) for a more concrete example.
 
-## Todo
+## Todo
 
 - Support for rest of the properties
 - Variations
