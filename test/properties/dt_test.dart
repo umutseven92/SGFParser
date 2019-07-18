@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sgf_parser/exceptions/invalidPropertyValueException.dart';
 import 'package:sgf_parser/sgfParser.dart';
 
 void main() {
@@ -15,6 +16,13 @@ void main() {
       var parser = SGFParser(sgfString);
       var date = parser.parseDate();
       expect(date, equals(null));
+    });
+
+    test('Invalid Date should throw InvalidPropertyValueException', () {
+      const sgfString = 'RE[W+1.5]TM[0]DT[abc]';
+      var parser = SGFParser(sgfString);
+      expect(() => parser.parseDate(),
+          throwsA(isInstanceOf<InvalidPropertyValueException>()));
     });
   });
 }

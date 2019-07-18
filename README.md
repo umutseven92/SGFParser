@@ -1,14 +1,29 @@
-# sgf_parser
+# SGF Parser
 
-A new Flutter package project.
+[Smart Game Format](https://en.wikipedia.org/wiki/Smart_Game_Format) parser for Flutter & Dart. Currently only supports Go.
 
-## Getting Started
+## Supported Properties
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+AP, BR, DT, EV, FF, GM, KM, PB, PC, PW, RE, SZ, TM, US, WR, W, B
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+## Usage
+
+```dart
+// Initialize the parser with the SGF contents
+SGFParser parser = SGFParser(sgfString);
+Game game = parser.parse();
+
+// Attributes contain all non-move properties
+GameAttributes attributes = game.attributes;
+
+// Moves are listed in order
+List<Move> moves = game.moves;
+```
+
+Please see [here](https://github.com/umutseven92/SGFParser/blob/master/lib/example/example.dart) for a more concrete example.
+
+## Todo
+
+- Support for rest of the properties
+- Variations
+- Handicap
