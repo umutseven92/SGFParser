@@ -1,5 +1,6 @@
 library sgf_parser;
 
+import 'package:sgf_parser/exceptions/invalidMoveException.dart';
 import 'package:sgf_parser/exceptions/invalidPropertyValueException.dart';
 import 'package:sgf_parser/game/player.dart';
 import 'package:sgf_parser/properties/boardSize.dart';
@@ -51,6 +52,12 @@ class SGFParser {
     matches.forEach((match) {
       Color player = match.group(1) == 'B' ? Color.Black : Color.White;
       String moveString = match.group(2);
+
+      var moveExp = RegExp(r'^[a-zA-Z]{2}$');
+
+      if (moveString != '' && !moveExp.hasMatch(moveString)) {
+        throw InvalidMoveException(moveString);
+      }
 
       Move move;
       if (moveString == '' || moveString == 'tt') {
