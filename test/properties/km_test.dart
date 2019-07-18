@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sgf_parser/exceptions/invalidPropertyValueException.dart';
 import 'package:sgf_parser/properties/gameType.dart';
 import 'package:sgf_parser/sgfParser.dart';
 
@@ -24,5 +25,20 @@ void main() {
       var komi = parser.parseKomi(GameType.Chess);
       expect(komi, equals(null));
     });
+
+    test('Invalid Komi throws InvalidPropertyValueException', () {
+      const sgfString = '(;GM[1]SZ[19]KM[abv]';
+      var parser = SGFParser(sgfString);
+      expect(() => parser.parseKomi(GameType.Go),
+          throwsA(isInstanceOf<InvalidPropertyValueException>()));
+    });
+    
+    test('Komi lower than 0 throws InvalidPropertyValueException', () {
+      const sgfString = '(;GM[1]SZ[19]KM[-1]';
+      var parser = SGFParser(sgfString);
+      expect(() => parser.parseKomi(GameType.Go),
+          throwsA(isInstanceOf<InvalidPropertyValueException>()));
+    });
+
   });
 }

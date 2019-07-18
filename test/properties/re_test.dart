@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sgf_parser/exceptions/invalidPropertyValueException.dart';
 import 'package:sgf_parser/sgfParser.dart';
 
 void main() {
@@ -16,5 +17,13 @@ void main() {
       var result = parser.parseResult();
       expect(result, equals('?'));
     });
+
+    test('Invalid Result throws InvalidPropertyValueException', () {
+      const sgfString = '(;GM[1]RE[wrong]KM[abv]';
+      var parser = SGFParser(sgfString);
+      expect(() => parser.parseResult(),
+          throwsA(isInstanceOf<InvalidPropertyValueException>()));
+    });
+
   });
 }

@@ -1,5 +1,6 @@
 library sgf_parser;
 
+import 'package:sgf_parser/exceptions/invalidPropertyValueException.dart';
 import 'package:sgf_parser/game/player.dart';
 import 'package:sgf_parser/properties/boardSize.dart';
 import 'package:sgf_parser/exceptions/gameTypeNotSupportedException.dart';
@@ -17,7 +18,7 @@ class SGFParser {
   ];
   final String sgf;
 
-  T _parse<T>(String attribute, T Function(String) converter, [T defaultVal]) {
+  T _parse<T>(String attribute, [T Function(String) converter, T defaultVal]) {
     var exp = RegExp(attribute + r'\[(.*?)\]');
     var match = exp.firstMatch(sgf)?.group(1);
 
@@ -27,7 +28,19 @@ class SGFParser {
       }
       return defaultVal;
     }
+
+    if (converter == null) {
+      return match as T;
+    }
     return converter(match);
+  }
+
+  int _parseWithRange(String property, String match, int min, int max) {
+    var result = int.tryParse(match);
+    if (result == null || result < min || result > max) {
+      throw InvalidPropertyValueException(property, match);
+    }
+    return result;
   }
 
   List<Move> parseMoves() {
@@ -86,9 +99,21 @@ class SGFParser {
         var col = exp.firstMatch(match).group(1);
         var row = exp.firstMatch(match).group(2);
 
-        return BoardSize(int.parse(col), int.parse(row));
+        var colResult = _parseWithRange(
+            'SZ', col, 1, gameType == GameType.Go ? 52 : double.maxFinite);
+        var rowResult = _parseWithRange(
+            'SZ', row, 1, gameType == GameType.Go ? 52 : double.maxFinite);
+
+        if (colResult == rowResult) {
+          throw InvalidPropertyValueException('SZ', match);
+        }
+
+        return BoardSize(colResult, rowResult);
       } else {
-        return BoardSize.square(int.parse(match));
+        var result = _parseWithRange(
+            'SZ', match, 1, gameType == GameType.Go ? 52 : double.maxFinite);
+
+        return BoardSize.square(result);
       }
     }, defaultValue);
 
@@ -96,8 +121,10 @@ class SGFParser {
   }
 
   GameType parseGameType() {
-    GameType type = _parse(
-        'GM', (match) => GameType.values[int.parse(match) - 1], GameType.Go);
+    GameType type = _parse('GM', (match) {
+      var result = _parseWithRange('GM', match, 1, 40);
+      return GameType.values[result - 1];
+    }, GameType.Go);
 
     if (!supportedGameTypes.contains(type)) {
       throw GameTypeNotSupportedException(type, supportedGameTypes);
@@ -106,36 +133,44 @@ class SGFParser {
   }
 
   FileFormat parseFileFormat() {
-    return _parse('FF', (match) => FileFormat.values[int.parse(match) - 1],
-        FileFormat.FF1);
+    return _parse('FF', (match) {
+      var result = _parseWithRange('FF', match, 1, 4);
+      return FileFormat.values[result - 1];
+    }, FileFormat.FF1);
   }
 
   DateTime parseDate() {
-    return _parse('DT', DateTime.parse);
+    return _parse('DT', (match) {
+      var result = DateTime.tryParse(match);
+      if (result == null) {
+        throw InvalidPropertyValueException('DT', match);
+      }
+      return result;
+    });
   }
 
   String parseEvent() {
-    return _parse('EV', (match) => match);
+    return _parse('EV');
   }
 
   String parseApplication() {
-    return _parse('AP', (match) => match);
+    return _parse('AP');
   }
 
   String parseUser() {
-    return _parse('US', (match) => match);
+    return _parse('US');
   }
 
   String parsePlace() {
-    return _parse('PC', (match) => match);
+    return _parse('PC');
   }
 
   String parseWhitePlayerName() {
-    return _parse('PW', (match) => match);
+    return _parse('PW');
   }
 
   String parseWhitePlayerRank() {
-    return _parse('WR', (match) => match);
+    return _parse('WR');
   }
 
   Player parseWhitePlayer() {
@@ -146,11 +181,11 @@ class SGFParser {
   }
 
   String parseBlackPlayerName() {
-    return _parse('PB', (match) => match);
+    return _parse('PB');
   }
 
   String parseBlackPlayerRank() {
-    return _parse('BR', (match) => match);
+    return _parse('BR');
   }
 
   Player parseBlackPlayer() {
@@ -162,14 +197,29 @@ class SGFParser {
 
   double parseKomi(GameType type) {
     if (type == GameType.Go) {
-      return _parse('KM', (match) => double.parse(match), 0);
+      return _parse('KM', (match) {
+        var result = double.tryParse(match);
+
+        if (result == null || result < 0) {
+          throw InvalidPropertyValueException('KM', match);
+        }
+        return result;
+      }, 0);
     }
 
     return null;
   }
 
   String parseResult() {
-    return _parse('RE', (match) => match, '?');
+    return _parse('RE', (match) {
+      var exp = RegExp(
+          r'^Draw|^Void|^\?|^0|^B\+\d\.*\d*|^W\+\d\.*\d*|^B\+R$|^W\+R$|^B\+Resign|^W\+Resign|^B\+T$|^W\+T$|^B\+Time$|^W\+Time$|^B\+F$|^W\+F$|^B\+Forfeit|^W\+Forfeit');
+      if (exp.hasMatch(match)) {
+        return match;
+      } else {
+        throw InvalidPropertyValueException('RE', match);
+      }
+    }, '?');
   }
 
   int parseTime() {
