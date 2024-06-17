@@ -21,8 +21,7 @@ void main() {
     test('Invalid Date should throw InvalidPropertyValueException', () {
       const sgfString = 'RE[W+1.5]TM[0]DT[abc]';
       var parser = SGFParser(sgfString);
-      expect(() => parser.parseDate(),
-          throwsA(isInstanceOf<InvalidPropertyValueException>()));
+      expect(() => parser.parseDate(), throwsA(isInstanceOf<InvalidPropertyValueException>()));
     });
   });
 }

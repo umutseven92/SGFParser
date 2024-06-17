@@ -16,7 +16,7 @@ void main() {
       const sgfString = '(;GM[1]SZ[19]TM[0]';
       var parser = SGFParser(sgfString);
       var komi = parser.parseKomi(GameType.Go);
-      expect(komi, equals(0));
+      expect(komi, equals(null));
     });
 
     test('Komi is ignored if game type is not GM[1]', () {
@@ -29,16 +29,13 @@ void main() {
     test('Invalid Komi throws InvalidPropertyValueException', () {
       const sgfString = '(;GM[1]SZ[19]KM[abv]';
       var parser = SGFParser(sgfString);
-      expect(() => parser.parseKomi(GameType.Go),
-          throwsA(isInstanceOf<InvalidPropertyValueException>()));
+      expect(() => parser.parseKomi(GameType.Go), throwsA(isInstanceOf<InvalidPropertyValueException>()));
     });
-    
+
     test('Komi lower than 0 throws InvalidPropertyValueException', () {
       const sgfString = '(;GM[1]SZ[19]KM[-1]';
       var parser = SGFParser(sgfString);
-      expect(() => parser.parseKomi(GameType.Go),
-          throwsA(isInstanceOf<InvalidPropertyValueException>()));
+      expect(() => parser.parseKomi(GameType.Go), throwsA(isInstanceOf<InvalidPropertyValueException>()));
     });
-
   });
 }
