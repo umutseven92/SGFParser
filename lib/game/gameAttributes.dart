@@ -4,19 +4,19 @@ import 'package:sgf_parser/properties/fileFormat.dart';
 import 'package:sgf_parser/properties/gameType.dart';
 
 class GameAttributes {
-  final DateTime date;
+  final DateTime? date;
   final GameType gameType;
   final BoardSize boardSize;
   final FileFormat fileFormat;
-  final String event;
-  final String application;
-  final String user;
-  final String place;
+  final String? event;
+  final String? application;
+  final String? user;
+  final String? place;
   final Player blackPlayer;
   final Player whitePlayer;
-  final double komi;
+  final double? komi;
   final String result;
-  final int time;
+  final int? time;
 
   GameAttributes(
       this.fileFormat,

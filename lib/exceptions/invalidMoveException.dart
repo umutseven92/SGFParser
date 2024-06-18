@@ -1,5 +1,5 @@
 class InvalidMoveException implements Exception {
-  String cause;
+  String? cause;
 
   InvalidMoveException(String move) {
     cause = 'Invalid move $move.';
